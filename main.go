@@ -1,9 +1,9 @@
 package main
 
 import (
+	"crystal_snowflake/utils"
 	"fmt"
 	"log"
-	"snowflake_id_generator/utils"
 )
 
 func main() {
