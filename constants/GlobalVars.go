@@ -13,10 +13,3 @@ var (
 	TimeShift       = NodeBits + StepBits
 	NodeShift       = StepBits
 )
-
-const Base32Alphabet = "ybndrfg8ejkmcpqxot1uwisza345h769" //z-base-32 alphabet alternatives to Crockford's Base32 alphabet 0123456789ABCDEFGHJKMNPQRSTVWXYZ
-var DecodedBase32Alphabet [256]byte
-
-const Base58Alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
-
-var DecodeBase58Alphabet [256]byte

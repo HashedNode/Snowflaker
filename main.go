@@ -16,8 +16,7 @@ func main() {
 	snowflakeId := node.GenerateSnowflakeId()
 
 	fmt.Printf("Int64  ID: %d\n", snowflakeId)
-	fmt.Printf("String ID: %s\n", snowflakeId)
-	fmt.Printf("Base2  ID: %s\n", snowflakeId.ToBase2())
+	fmt.Printf("String ID: %s\n", snowflakeId.ToString())
 	fmt.Printf("Base64 ID: %s\n", snowflakeId.ToBase64())
 
 	// Print out the ID's timestamp
