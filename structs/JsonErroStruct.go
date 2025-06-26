@@ -1,6 +1,8 @@
 package structs
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type JsonError struct {
 	original []byte

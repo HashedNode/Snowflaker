@@ -1,13 +1,30 @@
 package main
 
 import (
+	"crystal_snowflake/constants"
 	"crystal_snowflake/utils"
-	"fmt"
 	"log"
+	"os"
+	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	node, err := utils.NewSnowflakeNode(2)
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("error loading .env file")
+	}
+
+	constants.InitGlobalVars()
+
+	nodeSize, err := strconv.ParseInt(os.Getenv("NODE_SIZE"), 10, 64)
+	if err != nil {
+		log.Fatal("error getting NODE_SIZE")
+	}
+
+	node, err := utils.NewSnowflakeNode(nodeSize)
 
 	if err != nil {
 		log.Fatal("error occurred while generate a node, err is: ", err)
@@ -15,17 +32,17 @@ func main() {
 
 	snowflakeId := node.GenerateSnowflakeId()
 
-	fmt.Printf("Int64  ID: %d\n", snowflakeId)
-	fmt.Printf("String ID: %s\n", snowflakeId.ToString())
-	fmt.Printf("Base64 ID: %s\n", snowflakeId.ToBase64())
+	log.Printf("Int64  ID: %d\n", snowflakeId)
+	log.Printf("String ID: %s\n", snowflakeId.ToString())
+	log.Printf("Base64 ID: %s\n", snowflakeId.ToBase64())
 
 	// Print out the ID's timestamp
-	fmt.Printf("ID Time  : %d\n", snowflakeId.Time())
+	log.Printf("ID Time  : %d\n", snowflakeId.Time())
 
 	// Print out the ID's node number
-	fmt.Printf("ID Node  : %d\n", snowflakeId.Node())
+	log.Printf("ID Node  : %d\n", snowflakeId.Node())
 
 	// Print out the ID's sequence number
-	fmt.Printf("ID Step  : %d\n", snowflakeId.Step())
+	log.Printf("ID Step  : %d\n", snowflakeId.Step())
 
 }
