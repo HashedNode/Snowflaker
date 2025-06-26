@@ -4,6 +4,7 @@ import (
 	"crystal_snowflake/generators"
 	"crystal_snowflake/services"
 	"crystal_snowflake/utils"
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,7 +14,7 @@ func main() {
 
 	utils.InitGlobalVars()
 
-	nodeSize, err := strconv.ParseInt(utils.GetEnvOrDefault("NODE_SIZE", "10"), 10, 64)
+	nodeSize, err := strconv.ParseInt(utils.GetEnvOrDefault("NODE_SIZE", "1"), 10, 64)
 	if err != nil {
 		log.Fatal("error getting NODE_SIZE")
 	}
@@ -27,9 +28,15 @@ func main() {
 	address := utils.GetEnvOrDefault("SERVER_ADDRESS", "0.0.0.0")
 	serverAddress := address + ":" + serverPort
 
-	err = http.ListenAndServe(serverAddress, nil)
-	if err != nil {
-		log.Fatal("error starting http server, err is", err)
+	srv := &http.Server{
+		Addr:    serverAddress,
+		Handler: nil,
 	}
-	log.Println("http server started on address", serverAddress)
+
+	go func() {
+		log.Println("HTTP server started on", serverAddress)
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Server error: %v", err)
+		}
+	}()
 }
