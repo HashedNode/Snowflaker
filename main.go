@@ -1,25 +1,16 @@
 package main
 
 import (
-	"crystal_snowflake/constants"
 	"crystal_snowflake/utils"
 	"log"
-	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("error loading .env file")
-	}
+	utils.InitGlobalVars()
 
-	constants.InitGlobalVars()
-
-	nodeSize, err := strconv.ParseInt(os.Getenv("NODE_SIZE"), 10, 64)
+	nodeSize, err := strconv.ParseInt(utils.GetEnvOrDefault("NODE_SIZE", "10"), 10, 64)
 	if err != nil {
 		log.Fatal("error getting NODE_SIZE")
 	}
