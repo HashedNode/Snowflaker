@@ -1,17 +1,19 @@
-package utils
+package generators
 
 import (
 	"crystal_snowflake/constants"
 	"crystal_snowflake/structs"
-	"errors"
+	"log"
 	"strconv"
 	"time"
 )
 
-func NewSnowflakeNode(nodeSize int64) (*structs.Node, error) {
+var SnowflakeNode *structs.Node
+
+func InitSnowflakeNode(nodeSize int64) {
 
 	if constants.NodeBits+constants.StepBits > 22 {
-		return nil, errors.New("you can share only 22 between Node/Step")
+		log.Fatal("you can share only 22 between Node/Step")
 	}
 
 	constants.Mutx.Lock()
@@ -31,10 +33,10 @@ func NewSnowflakeNode(nodeSize int64) (*structs.Node, error) {
 	node.NodeShift = constants.StepBits
 
 	if node.Node < 0 || node.Node > node.NodeMax {
-		return nil, errors.New("Node number must be between 0 and " + strconv.FormatInt(node.NodeMax, 10))
+		log.Fatal("Node number must be between 0 and " + strconv.FormatInt(node.NodeMax, 10))
 	}
 	var currentTime = time.Now()
 	node.Epoch = currentTime.Add(time.Unix(constants.Epoch/1000, (constants.Epoch%1000)*1000000).Sub(currentTime))
-	return &node, nil
 
+	SnowflakeNode = &node
 }

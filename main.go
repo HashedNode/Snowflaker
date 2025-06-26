@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crystal_snowflake/generators"
 	"crystal_snowflake/utils"
 	"log"
 	"strconv"
@@ -15,13 +16,9 @@ func main() {
 		log.Fatal("error getting NODE_SIZE")
 	}
 
-	node, err := utils.NewSnowflakeNode(nodeSize)
+	generators.InitSnowflakeNode(nodeSize)
 
-	if err != nil {
-		log.Fatal("error occurred while generate a node, err is: ", err)
-	}
-
-	snowflakeId := node.GenerateSnowflakeId()
+	snowflakeId := generators.SnowflakeNode.GenerateSnowflakeId()
 
 	log.Printf("Int64  ID: %d\n", snowflakeId)
 	log.Printf("String ID: %s\n", snowflakeId.ToString())
