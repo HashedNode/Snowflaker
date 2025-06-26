@@ -11,7 +11,7 @@ import (
 var SnowflakeNode *structs.Node
 
 func InitSnowflakeNode(nodeSize int64) {
-
+	
 	if constants.NodeBits+constants.StepBits > 22 {
 		log.Fatal("you can share only 22 between Node/Step")
 	}

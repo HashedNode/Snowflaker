@@ -2,8 +2,10 @@ package main
 
 import (
 	"crystal_snowflake/generators"
+	"crystal_snowflake/services"
 	"crystal_snowflake/utils"
 	"log"
+	"net/http"
 	"strconv"
 )
 
@@ -16,21 +18,18 @@ func main() {
 		log.Fatal("error getting NODE_SIZE")
 	}
 
+	serverPort := utils.GetEnvOrDefault("SERVER_PORT", "8080")
+
 	generators.InitSnowflakeNode(nodeSize)
 
-	snowflakeId := generators.SnowflakeNode.GenerateSnowflakeId()
+	http.HandleFunc("/generate-id", services.ServeSnowflakeId)
 
-	log.Printf("Int64  ID: %d\n", snowflakeId)
-	log.Printf("String ID: %s\n", snowflakeId.ToString())
-	log.Printf("Base64 ID: %s\n", snowflakeId.ToBase64())
+	address := utils.GetEnvOrDefault("SERVER_ADDRESS", "0.0.0.0")
+	serverAddress := address + ":" + serverPort
 
-	// Print out the ID's timestamp
-	log.Printf("ID Time  : %d\n", snowflakeId.Time())
-
-	// Print out the ID's node number
-	log.Printf("ID Node  : %d\n", snowflakeId.Node())
-
-	// Print out the ID's sequence number
-	log.Printf("ID Step  : %d\n", snowflakeId.Step())
-
+	err = http.ListenAndServe(serverAddress, nil)
+	if err != nil {
+		log.Fatal("error starting http server, err is", err)
+	}
+	log.Println("http server started on address", serverAddress)
 }
