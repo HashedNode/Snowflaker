@@ -1,4 +1,4 @@
-# Crystal-Snowflake
+# Snowflaker
 
 A micro-backend for generate unique ids using snowflake algorithm.
 
