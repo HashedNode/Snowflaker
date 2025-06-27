@@ -1,13 +1,18 @@
 package main
 
 import (
+	"context"
 	"crystal_snowflake/generators"
 	"crystal_snowflake/services"
 	"crystal_snowflake/utils"
 	"errors"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
+	"time"
 )
 
 func main() {
@@ -22,16 +27,20 @@ func main() {
 	serverPort := utils.GetEnvOrDefault("SERVER_PORT", "8080")
 
 	generators.InitSnowflakeNode(nodeSize)
+	muxServer := http.NewServeMux()
 
-	http.HandleFunc("/generate-id", services.ServeSnowflakeId)
+	muxServer.HandleFunc("/generate-id", services.ServeSnowflakeId)
 
 	address := utils.GetEnvOrDefault("SERVER_ADDRESS", "0.0.0.0")
 	serverAddress := address + ":" + serverPort
 
 	srv := &http.Server{
 		Addr:    serverAddress,
-		Handler: nil,
+		Handler: muxServer,
 	}
+
+	closeServer := make(chan os.Signal, 1)
+	signal.Notify(closeServer, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
 		log.Println("HTTP server started on", serverAddress)
@@ -39,4 +48,16 @@ func main() {
 			log.Fatalf("Server error: %v", err)
 		}
 	}()
+
+	<-closeServer
+	log.Println("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server forced to shutdown:", err)
+	}
+
+	log.Println("Server closed")
 }
