@@ -1,9 +1,9 @@
 package services
 
 import (
-	"crystal_snowflake/generators"
 	"log"
 	"net/http"
+	"snowflaker/generators"
 )
 
 func ServeSnowflakeId(w http.ResponseWriter, r *http.Request) {

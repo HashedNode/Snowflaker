@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
-	"crystal_snowflake/generators"
-	"crystal_snowflake/services"
-	"crystal_snowflake/utils"
 	"errors"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"snowflaker/generators"
+	"snowflaker/services"
+	"snowflaker/utils"
 	"strconv"
 	"syscall"
 	"time"

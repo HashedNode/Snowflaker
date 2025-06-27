@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"crystal_snowflake/constants"
 	"log"
 	"os"
+	"snowflaker/constants"
 	"strconv"
 )
 

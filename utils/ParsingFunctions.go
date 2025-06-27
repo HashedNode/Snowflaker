@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"crystal_snowflake/structs"
 	"encoding/base64"
 	"encoding/binary"
+	"snowflaker/structs"
 	"strconv"
 )
 
